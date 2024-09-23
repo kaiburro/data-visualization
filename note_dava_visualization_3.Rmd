@@ -1,0 +1,57 @@
+---
+title: "Data Visualization Chapter 3"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.width = 8, fig.height = 5)
+```
+
+## GitHub Documents
+
+This is an R Markdown format used for publishing markdown documents to GitHub. When you click the **Knit** button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.
+
+## Including Code
+
+You can include R code in the document as follows:
+
+```{r cars}
+library(gapminder)
+library(ggplot2)
+library(here)
+# gapminder
+p <- ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp))
+p + geom_point()
+p + geom_smooth()
+p + geom_point() + geom_smooth()
+p + geom_point() + geom_smooth(method = "lm")
+p + geom_point() + geom_smooth(method = "gam") + scale_x_log10()
+p + geom_point() + geom_smooth(method = "gam") + scale_x_log10(labels = scales::dollar)
+p + geom_point(color = "purple") + geom_smooth(method = "loess") + scale_x_log10()
+p + geom_point(alpha = 0.3) + geom_smooth(color = "orange", se = FALSE, size = 8, method = "lm") + scale_x_log10()
+# se = standard error
+p + geom_point(alpha = 0.3) + geom_smooth(method = "gam") + scale_x_log10(labels = scales::dollar) +
+  labs(x = "GDP Per Capita", y = "Life Expectancy in Years", title = "Economic Growth and Life Expectancy", 
+       subtitle = "Data points are country-years",
+       caption = "Source: Gapminder.")
+p <- ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp, color = continent, fill = continent))
+p + geom_point() + geom_smooth(method = "loess") + scale_x_log10()
+
+p <- ggplot(data = gapminder, mapping = aes(x = gdpPercap, y = lifeExp))
+p + geom_point(mapping = aes(color = log(pop))) + scale_x_log10()
+p.out <- p + geom_point() + geom_smooth(method = "loess") + scale_x_log10()
+ggsave(here("figures","lifeexp_vs_gdp_gradient.png"), plot = p.out)
+
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+
+ ```{r pressure, echo=FALSE}
+ plot(pressure)
+ ```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

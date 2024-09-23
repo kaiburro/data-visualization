@@ -1,0 +1,87 @@
+---
+title: "note_data_visualization_4"
+author: "Kai FUng"
+date: "2024-09-23"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+library(gapminder)
+library(ggplot2)
+library(here)
+p <- ggplot(data = gapminder, mapping = aes(x = year, y = gdpPercap))
+p + geom_line()
+p + geom_line(color = "gray70", aes(group = country)) + geom_smooth(linewidth = 1.1, method = "loess", se = FALSE) + 
+  scale_y_log10(labels=scales::dollar) + facet_wrap(~continent, ncol = 5) + labs(x = "Year", y = "GDP per Capita", title = "GDP per capita on Five Continents")
+```
+```{r gss_sm}
+library(socviz)
+p<-ggplot(data = gss_sm, mapping = aes(x = age, y = childs))
+p + geom_point(alpha = 0.2) + geom_smooth() + facet_grid(sex ~ race)
+p <- ggplot(data = gss_sm, mapping = aes(x = bigregion))
+p + geom_bar()
+p + geom_bar(mapping = aes(y = after_stat(prop)))
+p + geom_bar(mapping = aes(y = after_stat(prop), group= 1))
+# the value 1 is just a kind of dummy group that tells ggplot to use the whole dataset when establishing the denominator for its prop calculations
+
+p <- ggplot(data = gss_sm, mapping = aes(x = religion, color = religion))
+p + geom_bar()
+
+p <- ggplot(data = gss_sm, mapping = aes(x = religion, fill = religion))
+p + geom_bar()
+
+```
+
+```{r 4.5}
+p <- ggplot(data = gss_sm, mapping = aes(x = bigregion, fill = religion))
+p + geom_bar()
+p + geom_bar(position = "fill")
+p + geom_bar(position = "dodge", mapping = aes(y = ..prop..))
+p + geom_bar(position = "dodge", mapping = aes(y = ..prop.., group = religion))
+p <- ggplot(data = gss_sm, mapping = aes(x = religion))
+p + geom_bar(position = "dodge", mapping = aes(y = ..prop.., group = bigregion)) + facet_wrap(~bigregion, ncol = 2)
+```
+``` {r 4.6}
+p<- ggplot(data = midwest, mapping = aes(x=area))
+p + geom_histogram()
+p + geom_histogram(bins = 10)
+oh_wi <- c("OH","WI")
+p<- ggplot(data = subset(midwest, subset = state %in% oh_wi), mapping = aes(x = percollege, fill=state))
+p+geom_histogram(alpha=0.4, bins=20)
+p<-ggplot(data = midwest, mapping = aes(x = area))
+p + geom_density()
+p<-ggplot(data = midwest, mapping = aes(x = area, fill=state, color=state))
+p + geom_density(alpha = 0.3)
+
+p<-ggplot(data = subset (midwest, subset=state %in% oh_wi), mapping = aes(x = area, fill=state, color=state))
+p + geom_density(alpha = 0.3, mapping=(aes(y = ..scaled..)))
+```
+```{r 4.7}
+p <- ggplot(data = titanic, mapping = aes(x = fate, y = percent, fill=sex))
+p + geom_bar(position="dodge", stat="identity") + theme(legend.position = "top")
+p <- ggplot(data = oecd_sum, mapping = aes(x=year, y=diff, fill=hi_lo))
+# geom_col() = geom_bar(stat = "identity")
+p + geom_col() + guides(fill=FALSE) + labs(x=NULL, y="Difference in Years", 
+                                           title = "The US Life Expectancy Gap", 
+                                           subtitle = "Difference between US and OECD average life expectancies, 1960-2015", 
+                                           caption = "Data: OECD. After a chart by Christopher Ingraham, Washington Post, December 27th, 2017")
+```
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
